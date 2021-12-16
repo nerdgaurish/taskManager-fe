@@ -1,0 +1,13 @@
+.btn_submitForm{
+    background-color: #1976d2 !important;
+    color: #ffffff !important;
+    height: 2.8rem;
+    width: 100% !important;
+    border-radius: 8px !important;
+}
+
+.btn_addTask{
+    border-radius: 50% !important;
+    height: 50 !important;
+    width: 50 !important;
+}
