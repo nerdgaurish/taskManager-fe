@@ -24,7 +24,7 @@ const style = {
 };
 
 const AddTaskModal = (props) => {
-  const { setOpenModal, setIsEditing, openModal } = props;
+  const { setOpenModal, setIsEditing, openModal,showSuccess } = props;
 
   const handleOpenModal = () => setOpenModal(true);
 

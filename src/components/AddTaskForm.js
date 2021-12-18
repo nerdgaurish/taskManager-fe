@@ -2,6 +2,7 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -9,9 +10,9 @@ import {
 import { Container, TextField } from "@mui/material";
 import DateFnsUtils from "@date-io/date-fns";
 import Button from "@mui/material/Button";
-import axios from "axios";
-import { useSelector } from "react-redux";
+
 import { getFormattedDate } from "./CommonMethods";
+import { fetchTasksData1, addNewTask, updateTask } from "../reducers/taskActionCreator";
 
 const getTaskErrMsg = (type) => {
   if (type === "maxLength") {
@@ -32,7 +33,7 @@ const getDescErrMsg = (type) => {
 
 // eslint-disable-next-line func-names
 const AddTaskForm = function (props) {
-  const { isEditing, taskId, setIsEditing, setOpenModal } = props;
+  const { isEditing, taskId, setIsEditing, setOpenModal,showSuccess } = props;
 
   const { uID: userID } = useSelector((state) => state.userState.userData);
 
@@ -43,8 +44,10 @@ const AddTaskForm = function (props) {
     reset,
   } = useForm();
 
-  const [startDate, setStartDate] = useState(new Date());
 
+
+  const [startDate, setStartDate] = useState(new Date());
+  const dispatch = useDispatch();
   const onSubmit = async (data) => {
     if (isEditing) {
       const taskData = {
@@ -52,10 +55,7 @@ const AddTaskForm = function (props) {
         taskDesc: data.taskDesc,
         taskDate: getFormattedDate(startDate),
       };
-      await axios.patch(
-        `http://localhost:4000/api/v1/tasks/${taskId}`,
-        taskData
-      );
+      dispatch(updateTask(taskId,taskData))
       setIsEditing(false);
       setOpenModal(false);
     } else {
@@ -66,17 +66,23 @@ const AddTaskForm = function (props) {
         isDone: false,
         userID,
       };
-      await axios.post("http://localhost:4000/api/v1/tasks", taskData);
+      dispatch(addNewTask(taskData));
       setOpenModal(false);
     }
+    showSuccess();
+    dispatch(fetchTasksData1(userID))
   };
 
+  const taskListState = useSelector(state => state.task.taskList)
+  const taskList = taskListState.tasks;
+
   const fetchTask = async () => {
-    const {
-      data: { task },
-    } = await axios.get(`http://localhost:4000/api/v1/tasks/task/${taskId}`);
-    reset({ taskName: task.taskName, taskDesc: task.taskDesc });
-    setStartDate(task.taskDate);
+    const task = taskList.filter((task) => task._id === taskId)
+    reset({ 
+      taskName: task[0].taskName, 
+      taskDesc: task[0].taskDesc 
+    });
+    setStartDate(task[0].taskDate);
   };
 
   useEffect(() => {
@@ -86,6 +92,7 @@ const AddTaskForm = function (props) {
   }, []);
 
   return (
+    <>
     <form onSubmit={handleSubmit(onSubmit)}>
       <Container
         sx={{
@@ -152,6 +159,7 @@ const AddTaskForm = function (props) {
         </div>
       </Container>
     </form>
+    </>
   );
 };
 

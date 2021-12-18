@@ -1,20 +1,24 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unneeded-ternary */
 /* eslint-disable no-undef */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
 import { Container, Tab, Tabs, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import TodayIcon from "@mui/icons-material/Today";
 import ListIcon from "@mui/icons-material/List";
 import GridOnIcon from "@mui/icons-material/GridOn";
+import { ProgressSpinner } from 'primereact/progressspinner';
 import AddTaskModal from "./AddTaskModal";
 import ToDo from "./ToDo";
 import Calender from "./Calender";
 import Primeui from "../Pages/Primeui";
+import { Toast } from 'primereact/toast';
 import { arrayCheck } from "./CommonMethods";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchTasksData1, setTaskDoneByID } from "../reducers/taskActionCreator";
 
 // eslint-disable-next-line func-names
 const TabPanel = function (props) {
@@ -39,9 +43,18 @@ const TabPanel = function (props) {
 
 // eslint-disable-next-line react/function-component-definition
 const TabMenuListBar = (props) => {
-  const { isDoneFilter, taskList, searchTask } = props;
+  const { searchTask } = props;
 
   const [value, setValue] = useState(0);
+  const [filteredResults, setFilteredResults] = useState();;
+  const [loading, setLoading] = useState(true);
+  const [notification, setNotification] = useState(false);
+
+  const dispatch = useDispatch();
+  const isDone = useSelector((state) => state.userState.isDoneFilter);
+  const { uID: userID } = useSelector((state) => state.userState.userData);
+  const taskListState = useSelector(state => state.task.taskList)
+  const taskList = taskListState.tasks;
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -49,33 +62,37 @@ const TabMenuListBar = (props) => {
 
   // set todo done
   const checkDone = async (id) => {
-    const {
-      data: { task },
-    } = await axios.get(`http://localhost:4000/api/v1/tasks/task/${id}`);
-
-    await axios.patch(`http://localhost:4000/api/v1/tasks/${id}`, {
-      isDone: !task.isDone,
-    });
+    const task = taskList.filter((task) => task._id === id);
+    await dispatch(setTaskDoneByID(id, !task[0].isDone))
+    await dispatch(fetchTasksData1(userID))
   };
 
   const columns = [
     { field: "taskName", header: "Task" },
     { field: "taskDesc", header: "Description" },
     { field: "taskDate", header: "date" },
-  ];
+  ];  
+  
+ 
 
-  let filteredResults;
-  if (arrayCheck(taskList)) {
-    if (isDoneFilter) {
-      filteredResults = taskList.filter(
-        (i) => i.Task.includes(searchTask) && i.isDone === isDoneFilter
-      );
+  useEffect(() => {
+    if(arrayCheck(taskList)){      
+      isDone ? 
+        setFilteredResults(taskList.filter((task) => task.isDone === isDone && task.taskName.includes(searchTask))) : 
+        setFilteredResults(taskList.filter((task) => task.taskName.includes(searchTask)));
+      setLoading(false)
     }
-    filteredResults = taskList.filter((i) => i.taskName);
-  }
+  },[taskListState,isDone,searchTask])
+
+  const toast = useRef(null);
+
+  const showSuccess = () => {
+    toast.current.show({severity:'success', summary: 'Success Message', detail:'Message Content', life: 3000});
+}
 
   return (
     <>
+      <Toast ref={toast} />
       <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
         <Tabs value={value} onChange={handleChange} centered>
           <Tab
@@ -100,7 +117,7 @@ const TabMenuListBar = (props) => {
       </Box>
       <TabPanel value={value} index={0}>
         <>
-          <AddTaskModal {...props} />
+          <AddTaskModal {...props} showSuccess={showSuccess} />
           <Container
             sx={{
               display: "flex",
@@ -108,7 +125,7 @@ const TabMenuListBar = (props) => {
               justifyContent: "space-around",
             }}
           >
-            {arrayCheck(filteredResults) &&
+            { loading ? <ProgressSpinner /> :
               filteredResults.map((taskData) => (
                 <ToDo
                   key={taskData._id}
@@ -124,7 +141,7 @@ const TabMenuListBar = (props) => {
         <Calender {...props} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Primeui itemsData={filteredResults} columns={columns} />
+        <Primeui itemsData={taskList} columns={columns} />
       </TabPanel>
     </>
   );

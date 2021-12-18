@@ -37,7 +37,6 @@ export const styles = {
 };
 
 const Login = () => {
-  const history = useHistory();
 
   const dispatch = useDispatch();
 
@@ -47,15 +46,11 @@ const Login = () => {
   const [alertMsg, setAlertMsg] = useState("");
 
   const setUserSession = (uID, role) => {
-    dispatch(setLoggedIn());
+    dispatch(setLoggedIn());    
     let isAdmin = false;
-    if (role === "admin") {
-      history.push("/admin");
-      isAdmin = true;
-    } else {
-      history.push("/tasks");
-    }
+    role === "admin" ? isAdmin = true : isAdmin = false;
     localStorage.setItem("users", JSON.stringify({ uID, role, isAdmin }));
+    // isAdmin ? history.push("/admin") : history.push("/tasks");
   };
 
   const validateLogin = async () => {

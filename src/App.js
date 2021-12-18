@@ -29,7 +29,7 @@ const App = function () {
     const { username } = parseJwt(tokenID);
     const {
       data: {
-        user: { role },
+        user: { _id, role },
       },
     } = await axios.get(`http://localhost:4000/api/v1/user/${username}`, {
       headers: {
@@ -37,9 +37,11 @@ const App = function () {
       },
     });
     role === "admin" ? setisAdmin(true) : setisAdmin(false);
+    localStorage.setItem("users", JSON.stringify({ uID : _id, role, isAdmin }));
   };
 
   const isLoggedIn = useSelector((state) => state.userState.isLoggedIn);
+  const user = useSelector((state) => state.userState.userData);
   const dispatch = useDispatch();
   useEffect(() => {
     const userStatus = localStorage.getItem("token");
@@ -52,12 +54,14 @@ const App = function () {
     if (userData) {
       dispatch(setUserID(userData));
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, dispatch]);
   const redirectTo = () => {
+    
+    const { uID } = user;
     if (isAdmin) {
       return <Redirect to="/admin" />;
     }
-    if (isLoggedIn) {
+    if (isLoggedIn && uID !== "") {
       return <Redirect to="/tasks" />;
     }
     return <Login />;

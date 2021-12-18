@@ -8,12 +8,30 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { useSelector } from "react-redux";
+import {arrayCheck} from "./CommonMethods"
 
 const localizer = momentLocalizer(moment);
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 const Calender = (props) => {
-  const { eventlist, updateDate } = props;
+  const { updateDate } = props;
+
+  const eventObj = (ids, taskName, date, description) => {
+    const id = ids;
+    const title = taskName;
+    const allDay = true;
+    const start = new Date(date);
+    const end = new Date(date);
+    const desc = description;
+    return { id, title, allDay, start, end, desc };
+  };
+  
+  const taskListState = useSelector(state => state.task.taskList);
+  
+  const eventlist = arrayCheck(taskListState.tasks) ? taskListState.tasks.map((i) =>
+    eventObj(i._id, i.taskName, i.taskDate, i.taskDesc)
+  ) : [];
 
   const [events, setEvents] = useState([...eventlist]);
 

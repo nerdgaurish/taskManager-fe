@@ -30,11 +30,8 @@ export const userReducer = createSlice({
       state.userData = action.payload;
     },
     setIsDoneFilter: (state) => {
-      state.isDoneFilter = true;
-    },
-    removeIsDoneFilter: (state) => {
-      state.isDoneFilter = false;
-    },
+      state.isDoneFilter = !state.isDoneFilter;
+    }
   },
 });
 

@@ -3,6 +3,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import counterReducer from "./components/counterSlice";
 import taskCountReducer from "./components/taskSlice";
+import taskReducer from "./reducers/taskReducer";
 import userReducer from "./reducers/userReducer";
 
 export default configureStore({
@@ -10,5 +11,6 @@ export default configureStore({
     counter: counterReducer,
     taskCount: taskCountReducer,
     userState: userReducer,
+    task: taskReducer
   },
 });

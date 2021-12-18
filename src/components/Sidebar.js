@@ -17,9 +17,9 @@ import {
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Box } from "@mui/system";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { parseJwt } from "./CommonMethods";
-import { removeIsDoneFilter, setIsDoneFilter } from "../reducers/userReducer";
+import { setIsDoneFilter } from "../reducers/userReducer";
 
 const Sidebar = (props) => {
   const {
@@ -27,7 +27,6 @@ const Sidebar = (props) => {
     setOpenSideBar,
     userName,
     userAvatar,
-    isDoneFilter,
     addUserOpenModal,
   } = props;
 
@@ -76,13 +75,9 @@ const Sidebar = (props) => {
     setState({ ...state, [anchor]: open });
   };
 
-  const dispatchFunc = () => {
-    if (isDoneFilter) {
-      dispatch(removeIsDoneFilter());
-    } else {
-      dispatch(setIsDoneFilter());
-    }
-  };
+  const dispatchFunc = () => dispatch(setIsDoneFilter());
+
+  const filterChecked = useSelector((state) => state.userState.isDoneFilter);
 
   // eslint-disable-next-line no-shadow
   const list = (anchor) => {
@@ -93,7 +88,6 @@ const Sidebar = (props) => {
         onClick={toggleDrawer(anchor, true)}
         onKeyDown={toggleDrawer(anchor, true)}
       >
-        {console.log("triggere")}
         <List>
           <ListItem button>
             <ListItemIcon>
@@ -116,7 +110,7 @@ const Sidebar = (props) => {
           <ListItem sx={{ marginTop: -2 }}>
             <ListItemText primary="Done Tasks" />
             <Checkbox
-              defaultChecked={isDoneFilter}
+              defaultChecked={filterChecked}
               onChange={() => dispatchFunc()}
             />
           </ListItem>

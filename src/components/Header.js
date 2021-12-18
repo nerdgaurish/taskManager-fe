@@ -115,7 +115,6 @@ const Header = ({
 
   const onSearch = (event) => {
     setSearchTask(event.target.value);
-    dispatch(searchTaskValue(event.target.value));
   };
 
   const userLogout = () => {

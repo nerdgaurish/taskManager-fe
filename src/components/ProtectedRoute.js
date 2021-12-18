@@ -8,8 +8,9 @@ import { Redirect, Route } from "react-router-dom";
 
 const ProtectedRoute = (props) => {
   const isLoggedIn = useSelector((state) => state.userState.isLoggedIn);
-
-  if (!isLoggedIn) {
+  const user = useSelector((state) => state.userState.userData);
+  const { uID } = user;
+  if (!isLoggedIn && uID === "") {
     return <Redirect to="/" />;
   }
   return <Route {...props} />;

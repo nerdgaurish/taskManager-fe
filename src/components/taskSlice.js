@@ -7,7 +7,7 @@ export const taskSlice = createSlice({
   },
   reducers: {
     searchTaskValue: (state, action) => {
-      console.log(state, action);
+    
     },
   },
 });
