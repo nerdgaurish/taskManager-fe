@@ -1,66 +1,67 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable no-shadow */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
-import React, { useEffect, useState } from "react";
-import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
-import axios from "axios";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useDispatch, useSelector } from "react-redux";
-import Primeui from "./Primeui";
-import TabMenuListBar from "../components/TabMenuListBar";
-import { MemoizedHeader } from "../components/Header";
-import Sidebar from "../components/Sidebar";
+import React, { useEffect, useState } from 'react';
+import {
+  Button, Dialog, DialogActions, DialogTitle,
+} from '@mui/material';
+import axios from 'axios';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { useDispatch, useSelector } from 'react-redux';
+import Primeui from './Primeui';
+import TabMenuListBar from '../components/TabMenuListBar';
+import { MemoizedHeader } from '../components/Header';
+import Sidebar from '../components/Sidebar';
 import {
   arrayCheck,
   getFormattedDate,
   todayDate,
   parseJwt,
-} from "../components/CommonMethods";
-import { setUserID } from "../reducers/userReducer";
-import { deleteTaskByID, fetchTasksData1, updateDateByID } from "../reducers/taskActionCreator";
+} from '../components/CommonMethods';
+import { setUserID } from '../reducers/userReducer';
+import { deleteTaskByID, fetchTasksData1, updateDateByID } from '../reducers/taskActionCreator';
 
 //  styles
 export const styles = {
   paper: {
     padding: 20,
-    height: "70vh",
-    width: "50%",
-    margin: "30px auto",
+    height: '70vh',
+    width: '50%',
+    margin: '30px auto',
   },
   doneTask: {
-    textDecoration: "line-through",
-    color: "grey",
+    textDecoration: 'line-through',
+    color: 'grey',
   },
   pendingTask: {
-    textDecoration: "none",
+    textDecoration: 'none',
   },
 };
 
 const columns = [
-  { field: "firstName", header: "First_name" },
-  { field: "lastName", header: "Last_name" },
-  { field: "userName", header: "Username" },
+  { field: 'firstName', header: 'First_name' },
+  { field: 'lastName', header: 'Last_name' },
+  { field: 'userName', header: 'Username' },
 ];
 
 // eslint-disable-next-line func-names
 const Homepage = function (props) {
-
-  const token = localStorage.getItem("token");
- const { uID } = JSON.parse(localStorage.getItem("users"));
-  const { username } = token ? parseJwt(token) : "";
+  const token = localStorage.getItem('token');
+  const { uID } = JSON.parse(localStorage.getItem('users'));
+  const { username } = token ? parseJwt(token) : '';
   const dispatch = useDispatch();
   const { uID: userID } = useSelector((state) => state.userState.userData);
   const isDoneValue = useSelector((state) => state.userState.isDoneFilter);
 
-  
   const [dateValue, setDateValue] = useState(todayDate);
   const [isEditing, setIsEditing] = useState(false);
-  const [taskId, setTaskId] = useState("");
-  const [searchTask, setSearchTask] = useState("");
+  const [taskId, setTaskId] = useState('');
+  const [searchTask, setSearchTask] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [todoForm, setTodoForm] = useState(false);
-  const [adminPanel, setAdminPanel] = useState("");
+  const [adminPanel, setAdminPanel] = useState('');
   const [openSideBar, setOpenSideBar] = useState(false);
   const [openDelModal, setOpenDelModal] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -76,7 +77,7 @@ const Homepage = function (props) {
   const fetchUsers = async () => {
     const {
       data: { user: usersList },
-    } = await axios.get("http://localhost:4000/api/v1/user/");
+    } = await axios.get('http://localhost:4000/api/v1/user/');
     setUsers(usersList);
   };
 
@@ -90,7 +91,7 @@ const Homepage = function (props) {
         Authorization: `Bearer ${token}`,
       },
     });
-    role === "admin" ? setIsAdmin(true) : setIsAdmin(false);
+    role === 'admin' ? setIsAdmin(true) : setIsAdmin(false);
     dispatch(setUserID({ uID, role, isAdmin }));
   };
 
@@ -104,8 +105,8 @@ const Homepage = function (props) {
   };
 
   const deleteTask = async () => {
-    await dispatch(deleteTaskByID(taskId))
-    await dispatch(fetchTasksData1(uID))
+    await dispatch(deleteTaskByID(taskId));
+    await dispatch(fetchTasksData1(uID));
   };
 
   const handleClose = () => {
@@ -122,11 +123,9 @@ const Homepage = function (props) {
     fetchUsers();
   }, [isEditing]);
 
-
-
   const updateDate = async (id, date) => {
-    await dispatch(updateDateByID(id, date))
-    await dispatch(fetchTasksData1(uID))
+    await dispatch(updateDateByID(id, date));
+    await dispatch(fetchTasksData1(uID));
   };
 
   const handleOnDeleteModal = (id) => {
@@ -135,8 +134,8 @@ const Homepage = function (props) {
   };
 
   useEffect(() => {
-    dispatch(fetchTasksData1(uID))
-  },[])
+    dispatch(fetchTasksData1(uID));
+  }, []);
 
   return (
     <>
@@ -168,7 +167,6 @@ const Homepage = function (props) {
           delModalOpen={delModalOpen}
           updateDate={updateDate}
           userID={userID}
-
           dateValue={dateValue}
           setDateValue={setDateValue}
           setTaskId={setTaskId}

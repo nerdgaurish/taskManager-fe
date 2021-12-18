@@ -1,20 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { useDispatch } from "react-redux";
+/* eslint-disable no-param-reassign */
+import { createSlice } from '@reduxjs/toolkit';
 
 export const taskReducer = createSlice({
   name: 'taskState',
   initialState: {
-    taskList: []
+    taskList: [],
   },
   reducers: {
     getAllTaskList: (state, action) => {
-        state.taskList = action.payload;// JSON.stringify(action.payload);
-    }
-  }
+      state.taskList = action.payload; // JSON.stringify(action.payload);
+    },
+  },
 });
 
 export const { getAllTaskList } = taskReducer.actions;
-
-
 
 export default taskReducer.reducer;
