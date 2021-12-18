@@ -1,10 +1,9 @@
-/* eslint-disable import/prefer-default-export */
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable no-unused-expressions */
-/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/function-component-definition */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Checkbox,
   Divider,
@@ -13,13 +12,12 @@ import {
   ListItemIcon,
   ListItemText,
   SwipeableDrawer,
-} from "@mui/material";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { Box } from "@mui/system";
-import axios from "axios";
-import { useDispatch } from "react-redux";
-import { parseJwt } from "./CommonMethods";
-import { removeIsDoneFilter, setIsDoneFilter } from "../reducers/userReducer";
+} from '@mui/material';
+import { Box } from '@mui/system';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { parseJwt } from './CommonMethods';
+import { setIsDoneFilter } from '../reducers/userReducer';
 
 const Sidebar = (props) => {
   const {
@@ -27,16 +25,15 @@ const Sidebar = (props) => {
     setOpenSideBar,
     userName,
     userAvatar,
-    isDoneFilter,
     addUserOpenModal,
   } = props;
 
-  const anchor = "left";
+  const anchor = 'left';
 
   const dispatch = useDispatch();
 
-  const token = localStorage.getItem("token");
-  const { username } = token ? parseJwt(token) : "";
+  const token = localStorage.getItem('token');
+  const { username } = token ? parseJwt(token) : '';
 
   const [isAdmin, setisAdmin] = useState(false);
 
@@ -50,7 +47,7 @@ const Sidebar = (props) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    role === "admin" ? setisAdmin(true) : setisAdmin(false);
+    role === 'admin' ? setisAdmin(true) : setisAdmin(false);
   };
 
   useEffect(() => {
@@ -63,81 +60,73 @@ const Sidebar = (props) => {
     left: openSideBar,
   });
 
-  // eslint-disable-next-line no-shadow
-  const toggleDrawer = (anchor, open) => (event) => {
+  const toggleDrawer = (anchorEl, open) => (event) => {
     if (
-      event &&
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
+      event
+      && event.type === 'keydown'
+      && (event.key === 'Tab' || event.key === 'Shift')
     ) {
       return;
     }
     setOpenSideBar(false);
-    setState({ ...state, [anchor]: open });
+    setState({ ...state, [anchorEl]: open });
   };
 
-  const dispatchFunc = () => {
-    if (isDoneFilter) {
-      dispatch(removeIsDoneFilter());
-    } else {
-      dispatch(setIsDoneFilter());
-    }
-  };
+  const dispatchFunc = () => dispatch(setIsDoneFilter());
+
+  const filterChecked = useSelector((filterstate) => filterstate.userState.isDoneFilter);
 
   // eslint-disable-next-line no-shadow
-  const list = (anchor) => {
-    return (
-      <Box
-        sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
-        role="presentation"
-        onClick={toggleDrawer(anchor, true)}
-        onKeyDown={toggleDrawer(anchor, true)}
-      >
-        {console.log("triggere")}
-        <List>
-          <ListItem button>
-            <ListItemIcon>
-              <img
-                src={userAvatar}
-                alt=""
-                style={{
-                  borderRadius: "10rem",
-                  height: "2.6rem",
-                  width: "auto",
-                }}
-              />
-            </ListItemIcon>
-            <ListItemText primary={`Hello, ${userName}`} />
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <ListItemText primary="Filters" />
-          </ListItem>
-          <ListItem sx={{ marginTop: -2 }}>
-            <ListItemText primary="Done Tasks" />
-            <Checkbox
-              defaultChecked={isDoneFilter}
-              onChange={() => dispatchFunc()}
+  const list = (anchor) => (
+    <Box
+      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+      role="presentation"
+      onClick={toggleDrawer(anchor, true)}
+      onKeyDown={toggleDrawer(anchor, true)}
+    >
+      <List>
+        <ListItem button>
+          <ListItemIcon>
+            <img
+              src={userAvatar}
+              alt=""
+              style={{
+                borderRadius: '10rem',
+                height: '2.6rem',
+                width: 'auto',
+              }}
             />
-          </ListItem>
-        </List>
+          </ListItemIcon>
+          <ListItemText primary={`Hello, ${userName}`} />
+        </ListItem>
         <Divider />
-        <List style={{ display: isAdmin ? "block" : "none" }}>
-          <ListItem>
-            <ListItemText primary="Users" />
-          </ListItem>
+        <ListItem>
+          <ListItemText primary="Filters" />
+        </ListItem>
+        <ListItem sx={{ marginTop: -2 }}>
+          <ListItemText primary="Done Tasks" />
+          <Checkbox
+            defaultChecked={filterChecked}
+            onChange={() => dispatchFunc()}
+          />
+        </ListItem>
+      </List>
+      <Divider />
+      <List style={{ display: isAdmin ? 'block' : 'none' }}>
+        <ListItem>
+          <ListItemText primary="Users" />
+        </ListItem>
 
-          <ListItem>
-            <ListItemText
-              primary="Add User"
-              style={{ cursor: "pointer" }}
-              onClick={() => addUserOpenModal()}
-            />
-          </ListItem>
-        </List>
-      </Box>
-    );
-  };
+        <ListItem>
+          <ListItemText
+            primary="Add User"
+            style={{ cursor: 'pointer' }}
+            onClick={() => addUserOpenModal()}
+          />
+        </ListItem>
+      </List>
+    </Box>
+  );
 
   const toggleSideBar = (value) => {
     setState({ ...state, left: { value } });

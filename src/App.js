@@ -1,25 +1,25 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-unused-expressions */
-import React, { useEffect, useState } from "react";
-import "./App.css";
+import React, { useEffect, useState } from 'react';
+import './App.css';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
-} from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import Login from "./components/Login";
-import Homepage from "./Pages/Homepage";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Notfound from "./components/Notfound";
-import AdminPage from "./components/AdminPage";
-import ProtectedAdmin from "./components/ProtectedAdmin";
-import "primereact/resources/themes/saga-blue/theme.css";
-import "primereact/resources/primereact.min.css";
-import { setLoggedIn, setUserID } from "./reducers/userReducer";
-import { parseJwt } from "./components/CommonMethods";
+} from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import Login from './components/Login';
+import Homepage from './Pages/Homepage';
+import ProtectedRoute from './components/ProtectedRoute';
+import Notfound from './components/Notfound';
+import AdminPage from './components/AdminPage';
+import ProtectedAdmin from './components/ProtectedAdmin';
+import 'primereact/resources/themes/saga-blue/theme.css';
+import 'primereact/resources/primereact.min.css';
+import { setLoggedIn, setUserID } from './reducers/userReducer';
+import { parseJwt } from './components/CommonMethods';
 
 // eslint-disable-next-line func-names
 const App = function () {
@@ -29,35 +29,38 @@ const App = function () {
     const { username } = parseJwt(tokenID);
     const {
       data: {
-        user: { role },
+        user: { _id, role },
       },
     } = await axios.get(`http://localhost:4000/api/v1/user/${username}`, {
       headers: {
         Authorization: `Bearer ${tokenID}`,
       },
     });
-    role === "admin" ? setisAdmin(true) : setisAdmin(false);
+    role === 'admin' ? setisAdmin(true) : setisAdmin(false);
+    localStorage.setItem('users', JSON.stringify({ uID: _id, role, isAdmin }));
   };
 
   const isLoggedIn = useSelector((state) => state.userState.isLoggedIn);
+  const user = useSelector((state) => state.userState.userData);
   const dispatch = useDispatch();
   useEffect(() => {
-    const userStatus = localStorage.getItem("token");
+    const userStatus = localStorage.getItem('token');
     if (userStatus) {
       dispatch(setLoggedIn());
       getUserData(userStatus);
     }
 
-    const userData = localStorage.getItem("users");
+    const userData = localStorage.getItem('users');
     if (userData) {
       dispatch(setUserID(userData));
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, dispatch]);
   const redirectTo = () => {
+    const { uID } = user;
     if (isAdmin) {
       return <Redirect to="/admin" />;
     }
-    if (isLoggedIn) {
+    if (isLoggedIn && uID !== '') {
       return <Redirect to="/tasks" />;
     }
     return <Login />;

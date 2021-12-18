@@ -3,12 +3,14 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/function-component-definition */
-import React from "react";
-import { Card, CardContent, Checkbox, Grid, Typography } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
+import React from 'react';
+import {
+  Card, CardContent, Checkbox, Grid, Typography,
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 
 export const styles = {
   card: {
@@ -17,39 +19,41 @@ export const styles = {
     padding: 1,
     marginBottom: 3,
     marginLeft: 0,
-    backgroundColor: "#fafafa",
+    backgroundColor: '#fafafa',
   },
   innerCard: {
     maxWidth: 475,
     minWidth: 275,
   },
   cardContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   cardIconSection: {
     marginTop: -2,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 };
 
-const label = { inputProps: { "aria-label": "Checkbox demo" } };
+const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 const ToDo = (props) => {
-  const { taskData, updateTask, delModalOpen, checkDone } = props;
+  const {
+    taskData, updateTask, delModalOpen, checkDone,
+  } = props;
 
   const todoColor = (date) => {
     if (new Date(date).toLocaleDateString() < new Date().toLocaleDateString()) {
-      return "hsl(358,62%,52%)";
+      return 'hsl(358,62%,52%)';
     }
     if (new Date(date).toLocaleDateString() > new Date().toLocaleDateString()) {
-      return "hsl(206,100%,40%)";
+      return 'hsl(206,100%,40%)';
     }
-    return "hsl(140,40%,55%)";
+    return 'hsl(140,40%,55%)';
   };
 
   return (
@@ -78,11 +82,12 @@ const ToDo = (props) => {
           </Grid>
 
           <Grid sx={styles.cardIconSection}>
-            <Checkbox {...label}
+            <Checkbox
+              {...label}
               icon={<BookmarkBorderIcon />}
               checkedIcon={<BookmarkIcon />}
               sx={{
-                "& .MuiSvgIcon-root": {
+                '& .MuiSvgIcon-root': {
                   fontSize: 30,
                   color: `${todoColor(taskData.taskDate)}`,
                 },

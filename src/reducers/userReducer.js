@@ -1,15 +1,15 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-const-assign */
 /* eslint-disable no-param-reassign */
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 export const userReducer = createSlice({
-  name: "userstate",
+  name: 'userstate',
   initialState: {
     isLoggedIn: false,
     userData: {
-      uID: "",
-      role: "",
+      uID: '',
+      role: '',
       isAdmin: false,
     },
     isDoneFilter: false,
@@ -21,8 +21,8 @@ export const userReducer = createSlice({
     setLoggedOut: (state) => {
       state.isLoggedIn = false;
       state.userData = {
-        uID: "",
-        role: "",
+        uID: '',
+        role: '',
         isAdmin: false,
       };
     },
@@ -30,10 +30,7 @@ export const userReducer = createSlice({
       state.userData = action.payload;
     },
     setIsDoneFilter: (state) => {
-      state.isDoneFilter = true;
-    },
-    removeIsDoneFilter: (state) => {
-      state.isDoneFilter = false;
+      state.isDoneFilter = !state.isDoneFilter;
     },
   },
 });

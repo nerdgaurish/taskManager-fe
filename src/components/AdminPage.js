@@ -3,23 +3,23 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/function-component-definition */
-import { Fade, Modal } from "@mui/material";
-import { Box } from "@mui/system";
-import React, { useEffect, useState } from "react";
-import { useLocation, useHistory } from "react-router-dom";
-import Homepage from "../Pages/Homepage";
-import AddUser from "./AddUser";
-import UserStats from "./UserStats";
+import { Fade, Modal } from '@mui/material';
+import { Box } from '@mui/system';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
+import Homepage from '../Pages/Homepage';
+import AddUser from './AddUser';
+import UserStats from './UserStats';
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
   width: 400,
   height: 300,
-  bgcolor: "#ffffff",
-  border: "2px solid #000",
+  bgcolor: '#ffffff',
+  border: '2px solid #000',
   borderRadius: 2,
   boxShadow: 54,
   p: 4,
@@ -32,25 +32,24 @@ const AdminPage = () => {
   const history = useHistory();
 
   const [userPage, setUserPage] = useState(false);
-  const [userName, setUserName] = useState("");
-  const [userID, setUserID] = useState("");
+  const [userName, setUserName] = useState('');
+  const [userID, setUserID] = useState('');
   const [addUserModal, setAddUserModal] = useState(false);
 
   useEffect(() => {
-    location.pathname === "/admin/add-user"
+    location.pathname === '/admin/add-user'
       ? setAddUserModal(true)
       : setAddUserModal(false);
   }, [location]);
 
   const addUserOpenModal = () => {
-    console.log("pok")
     setAddUserModal(true);
-    history.push("/admin/add-user");
+    history.push('/admin/add-user');
   };
 
   const addUserhandleCloseModal = () => {
     setAddUserModal(false);
-    history.push("/admin");
+    history.push('/admin');
   };
 
   // eslint-disable-next-line no-unused-vars

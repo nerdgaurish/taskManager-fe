@@ -4,14 +4,18 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/function-component-definition */
-import React from "react";
-import { Avatar, Card, CardContent, Grid, Typography } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { styles } from "./ToDo";
+import React from 'react';
+import {
+  Avatar, Card, CardContent, Grid, Typography,
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { styles } from './ToDo';
 
 const UserCard = (props) => {
-  const { First_name, Last_name, uID, delUser, Username, openUser } = props;
+  const {
+    First_name, Last_name, uID, delUser, Username, openUser,
+  } = props;
 
   return (
     <Card sx={styles.card}>
@@ -20,20 +24,23 @@ const UserCard = (props) => {
           <Avatar alt={First_name} src={props.Avatar} />
           <Grid>
             <Typography variant="h5" fontWeight="bold">
-              {First_name} {Last_name}
+              {First_name}
+              {' '}
+              {Last_name}
             </Typography>
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              @{Username}
+              @
+              {Username}
             </Typography>
           </Grid>
           <Grid sx={styles.cardIconSection}>
             <DeleteIcon
               onClick={() => delUser(uID)}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: 'pointer' }}
             />
             <ChevronRightIcon
               onClick={() => openUser(uID, Username)}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: 'pointer' }}
             />
           </Grid>
         </CardContent>
